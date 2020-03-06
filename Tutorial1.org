@@ -1,0 +1,27 @@
+#+TITLE Tutorial 1 and 2
+* Question 1
+** b) 8n^2 < 64 n log(n) : 27 > n > 2
+** c) smallest n that does not satisfy the inequality =100n^2 > 2^n= is 15
+
+* Question 2 
+#+BEGIN_SRC java
+public void traverse(Node t)
+{
+    if(t != null) // 1 comparison O(1)
+    {
+        traverse(t.left); // 1 memory access, 1 call, O(1)
+        System.out.println(t.get_data()); // 1 print, 1 memory access, O(1)
+        traverse(t.right); // 1 memory access, 1 call, O(1)
+    }
+}
+#+END_SRC
+** a)
+   Let n be the number of nodes that need to be traversed. The function traverse must be called at least n times
+   in order to visit all of the nodes. It will be called more than that though because traverse will be called for
+   each null child a node has. This means that the best case and the worst case are the same. Let c1 be the constant
+   time for a non null call to traverse and c2 be th constant time for a null call to traverse. The total time is 
+   n * c2 + (n + 1) * c1
+   c2n + c1n + c1
+   n(c1 + c2) + c1
+   O(n)
+   
