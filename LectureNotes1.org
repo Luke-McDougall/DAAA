@@ -1,0 +1,369 @@
+* Algorithm 
+  - An algorithm is any well-defined computational procedure that
+    - takes some value as input
+    - produces some value as output
+    - solves a specified computational problem
+  - An algorithm
+    - must be correct (i.e., always gives the right result)
+    - can be specified in English, as a computer program, or as
+      hardware design.
+* Problem Example 1
+  - Sorting problem :: A problem you have learnt before...
+  - Input :: a sequence of /n/ numbers (a1, a2, ..., an)
+  - Output :: A reordering (b1, b2, ..., bn) of input sequences such
+              that b1 <= b2 <= ... <= bn.
+  - Example
+  - Input :: (30, 20, 41, 51, 3, 20)
+  - Output :: (3, 20, 20, 30, 41, 51)
+
+
+  =INSERTION-SORT (A)=
+  #+BEGIN_SRC c
+    for(int j = 1; j < A.length; j++)
+    {
+        int key = A[j];
+        // insert A[j] into the sorted sequence A[1 ... j-1]
+        int i = j - 1;
+        while(i > 0 && A[i] > key)
+        {
+            A[i + 1] = A[i];
+            i--;
+        }
+        A[i + 1] = key;
+    }
+  #+END_SRC
+  - A.length is the total number of elements in array A.
+  - Insertion sort (IS) is /in-place/ sorting algorithm: the numbers
+    are rearranged within the array A; it requires only a constant
+    amount of memory for temporary variables, loop control variables,
+    sentinel, etc.
+  - IS is a /stable/ sorting algorithm: it maintains a relative order
+    of repeated elements.
+  - IS is fast for small sized input and for input that is almost
+    sorted.
+* Problem Example 2
+  - Greatest Common Divisor (GCD) :: learnt in high school...
+  - Input :: Integers X and Y
+  - Output :: The largest integer Z that divides both X and Y, i.e., Z
+              = GCD(X, Y)
+  - Note :: GCD(X, Y) = GCD(Y, X)
+  - Example:
+  - Input :: X = 1035, Y = 759
+  - Output :: Z = GCD(1035, 759) = 69
+** Algorithm 1
+   - Step 1 :: Find all *prime factors* of both X and Y
+   - Step 2 :: Multiply all *common* prime factors to form Z
+   - Example:
+   - Step 1 :: 1035 = 3^2 * 5 * 23 and 759 = 3 * 11 * 23
+     - The common prime factors are: 3 and 23
+   - Step 2 :: Z = 3 * 23 = 69
+** Algorithm 2
+   For two positive integers X and Y, where X >= Y, we have GCD(X, Y)
+   = GCD(X *mod* Y, Y)
+   - Note :: You can use a *recursive* or *iterative* function to
+             implement algorithm 2
+   - Recursive version
+     #+BEGIN_SRC c
+       int gcd(int x, int y)
+       {
+           if(y == 0) return x;
+           return gcd(y, x % y);
+       }
+     #+END_SRC
+   - Example :: X = 1035, Y = 759
+     1. GCD(1035, 759) = GCD(1035 mod 759, 759) = GCD(276, 759)
+     2. GCD(759, 276) = GCD(759 mod 276, 276) = GCD(207, 276)
+     3. GCD(276, 207) = GCD(276 mod 207, 207) = GCD(69, 207)
+     4. GCD(207, 69) = GCD(207 mod 69, 69) = GCD(0, 69) = GCD(69, 0)
+* Problem Example 3
+  - Least Common Multiple (LCM) :: also from high school...
+  - Input :: Integers *X* and *Y*
+  - Output :: The smallest integer *Z* divisible by both *X* and *Y*,
+              i.e., Z = LCM(X, Y)
+  - Note :: LCM(C, Y) = LCM(Y, X)
+  - Example
+  - Input :: X = 1035, Y = 759
+  - Output :: Z = LCM(1035, 759) = 11385
+** Algorithm 1
+   - Step 1 :: Find all *prime factors* of both X and Y
+   - Step 2 :: Multiply all prime factors to form Z
+     - For each prime factor common to X and Y, use the largest power.
+   - Example :: Find the LCM of X = 1035 and Y = 759
+   - Step 1 :: 1035 = 3^2 * 5 * 23 and 759 = 3 * 11 * 23
+     - The common prime factors are: 3 and 23
+   - Step 2 :: Z = 3^2 * 5 * 11 * 23 = 11385
+** Algorithm 2
+   We can use the solution of GCD(X, Y) to compute LCM(X, Y) as
+   follows. LCM(X, Y) = (X * Y) / GCD(X, Y). 
+   - Example :: X = 1035, Y = 759
+     - LCM(1035, 759) = (1035 * 759) / GCD(1035, 759)
+     - From previous example, we have GCD(1035, 759) = 69
+     - (1035 * 759) / 69 = 11385
+* Algorithm as Technology
+  - Algorithms devised for the same problem often differ dramatically
+    in their efficiency
+    - Which algorithm for each example is the most efficient?
+  - Example for sorting problem:
+    - Insertion (IS) sort takes c1 * n^2 to sort /n/ items.
+      - Analysis of time complexity discussed later.
+    - Merge sort (MS) takes time c2 * n * log(n)
+    - Assume /constants/ c1 = 2, c2 = 50
+    - Assume you use the algorithms to sort n = 10^6 elements.
+    - Assume CPU *A* runs *IS*, and CPU *B* runs *MS*
+      - CPU *A* executes 10^9 instructions/sec while CPU *B* executes
+        10^7 instructions/sec
+        - Thus CPU B is 100 times slower as compared to CPU A
+    - *A* takes: 2*(10^6)^2 ~instructions~
+                 ------------------------- = 2000 seconds
+                 10^9 ~instructions/sec~
+
+    - *B* takes: 50*10^6*log(10^6) ~instructions~
+                 ---------------------------------- = 100 seconds
+                 10^7 ~instructions/sec~
+
+    - *MS* runs faster even using a slower CPU and assuming larger
+      constant value!
+
+      - This example shows the importance of designing more efficient
+        algorithms for faster problem solutions!
+* How to design an algorithm?
+  - Reduce the problem to one with good known solution
+  - Write a brute force algorithm and use "tricks" to improve it
+  - This unit (DAAA) focuses on time-efficient algorithm
+  - Another unit, Theoretical Foundations of Computer Science, covers
+    problems
+    - with no known efficient solution :: NP-complete
+    - with no solution :: undecidable
+** Trick 1
+   - Use better data structures
+     - Often the implementation of an algorithm can be improved by
+       choosing appropriate data structures
+     - List vs. Arrays for split/join
+     - Heaps for repeated min/max
+     - Balanced trees or hashing for fast search
+     - Graphs, etc
+** Trick 2
+   - Preprocessing the input (e.g. sorting)
+     - Allows binary search vs. linear search
+     - Bring important items to the front of a list
+     - Attempt to format the data so the algorithm performs at its
+       best, rather than at its worst.
+** Trick 3
+   - Use good algorithm design techniques
+     - =Divide & Conquer technique=
+       - Split a problem into sub parts
+       - Solve each part
+       - Re-join to get a solution
+     - =Greedy approach=
+       - Define a "cost"
+         - Cost can be monetary value, time, etc.
+       - Sort items by best impact on cost
+       - Greedily choose the best until problem solved
+       - Note that the solution/result may or may not be "optimal"
+     - =Dynamic programming=
+* Algorithm Analysis
+  - Efficiency measure:
+    - Speed :: How long an algorithm takes to produce results
+      - This is the usual measure
+    - Space/memory :: How much memory is required to run the
+                      algorithm.
+      - This measure is less commonly used
+  - In general, the time taken by an algorithm grows with the size of
+    input
+    - Input size :: Depends on problems being studied (e.g. number of
+                    elements, nodes, links, etc.)
+    - What is the input size of a sorting algorithm?
+  - Use the same *computational model* for analysed algorithms
+    - Running time on particular input: number of primitive operations
+      or steps executed using the computation model/computer
+* Computation Model
+  - The usual (often not stated) computation model is the Random
+    Access Machine (RAM)
+    - Sequential - RAM executes one instruction at a time
+    - RAM contains instructions of real computers: arithmetic
+      (e.g. *add*, *multiply*), data movement (e.g. *load*, *store*),
+      control (e.g. *if*, *subroutine*, *call*).
+    - Each instruction takes a constant amount of time/step
+    - Running time: the total number of steps
+  - Data type: integer and floating point
+  - We need to limit the size of each word of data used
+** Example
+   | Instruction | Steps | Instruction | Steps |
+   |-------------+-------+-------------+-------|
+   | n = 1       |     1 | n = 2       |     1 |
+   | n = n + 1   |     2 | print n     |     1 |
+   | print n     |     1 | ---         |   --- |
+   | Total       |     4 | Total       |     2 |
+
+   - Assignment operation is 1 step in RAM model
+   - Addition operation is 1 step in RAM model
+   - Let's say print operation is 1 step in RAM model
+* Analysis of Insertion Sort
+  #+BEGIN_SRC c
+    for(int j = 1; j < A.length; j++)
+    {
+        int key = A[j];
+        int i = j - 1;
+
+        while(i > 0 && A[i] > key)
+        {
+            A[i + 1] = A[i];
+            i = i - 1;
+        }
+        A[i + 1] = key;
+    }
+  #+END_SRC
+  | Insertion Sort(A)                 | cost | times               |
+  |-----------------------------------+------+---------------------|
+  | for(int j = 1; j < A.length; j++) | c1   | n                   |
+  | int key = A[j];                   | c2   | n - 1               |
+  | int i = j - 1                     | c4   | n - 1               |
+  | while(i > 0 && A[i] > key)        | c5   | sum:j=1:n: (tⱼ + 1) |
+  | A[i + 1] = A[i];                  | c6   | sum:j=1:n: (tⱼ)     |
+  | i = i - 1                         | c7   | sum:j=1:n: (tⱼ)     |
+  | A[i + 1] = key                    | c8   | n - 1               |
+  
+  ci = the constant number of steps used to execute the operation in
+  line i
+  tⱼ = the number of elements the jth key has to travel to get in it's
+  proper place.
+  
+  T(n) = c1*n + c2*(n-1) + c4*(n-1) + c5*sum:j=1:n:(tⱼ + 1) +
+  c6*sum:j=1:n:(tⱼ) + c7*sum:j=1:n:(tⱼ) + c8*(n-1)
+
+  =So, running time, T(n), depends on input size n = A.length=
+
+  - Best Case :: When the array is already sorted
+    - Line 5: IF A[i] <= key then tⱼ = 0 for all j.
+  - Thus,
+    c5*sum:j=1:n:(tⱼ + 1) = c5*sum:j=1:n:(0 + 1) = c5*(n - 1)
+    
+    c6*sum:j=1:n:(tⱼ) = c7*sum:j=1:n:(tⱼ) = 0
+
+    T(n) c1*n + c2*(n-1) + c4*(n-1) + c5*(n-1) + 0 + 0 + c8*(n-1)
+    =    (c1 + c2 + c4 + c5 + c8)*n - (c2 + c4 + c5 + c8)
+    =    a*n + b
+  - Worst Case :: the *longest running time* for an input of size n
+    - the array is in reverse sorted order
+    - Must compare each A[j] with each element in sorted sub array
+      A[1...j - 1]
+      - tⱼ = j, for j = 1, 2,...,n
+      Thus,                                          n*(n + 1)
+      c5*sum:j=1:n:(tⱼ + 1) = c5*sum:j=1:n:(j + 1) = --------- - 1
+                                                        2
+                                            (n-1)*n
+     c6*sum:j=1:n:(tⱼ) = c6*sum:j=1:n:(j) = ------- and c7 as well. 
+                                               2
+     
+     T(n) = c1*n + c2*(n-1) + c4*(n-1) + c5*(n*(n + 1)/2 -1) +
+      c6*((n-1)*n/2) + c7*((n-1)*n/2) + c8*(n-1)
+     = (c1+c2+c4+c8)*n - (c2+c4+c8) + (c6 +
+      c7)*((n-1)*n/2) + c5*(n*(n+1)/2 -1)
+      
+=working out time=
+     n^2 + n                    n^2 - n
+c5* (------- - 1),  (c6 + c7)* (-------)
+        2                          2
+        
+n^2*c5 + n*c5         c6*n^2 + c7*n^2 - c6*n - c7*n
+------------- - c5 +  -----------------------------
+      2                           2
+      
+(c5 + c6 + c7)*n^2 + (c5 - c6 - c7)*n
+-------------------------------------  - c5
+                 2
+                 
+ c5   c6   c7                       c5   c6   c7
+(-- + -- + --)* n^2 + (c1+c2+c4+c8+ -- - -- - --)*n - (c2+c4+c8-c5)
+ 2    2    2                        2    2    2
+ 
+a*n^2 + b*n + d
+=end of working out time=
+~How do you like my ascii math formulas?~
+* Growth of functions
+  - Consider an^2 + bn + c
+    - For large /n/, the value of /bn + c/ is relatively insignificant
+      to the value of an^2
+  - Consider an^2
+    - For large /n/, the constant coefficient /a/ is less significant
+      than the rate of growth of n
+  - Thus we express an^2 + bn + c as O(n^2)
+    - Read as "Big theta of n-squared" (pretend it's a theta symbol
+      not just the letter "o" pls).
+* O(n) - Big-oh of n
+  - *Asymptotic /upper/ bound*
+    - A given function /f(n)/ is /O(g(n))/ if there exist positive
+      constants c and n₀ such that: ~0≤f(n)≤c*g(n)~ for all n ≥ n₀.
+    - O(g(n)) represents a set of functions 
+      {f(n):∃c>0,n₀>0 such that 0≤f(n)≤c.g(n),∀n≥n₀}
+      ∃ is read as：there exists, there is, or there are.
+      ∀ is read as：for all, for any, or for each
+** O example 
+   Show that 2n + 6 = O(n)
+   - 0≤2n + 6 ≤ cn, definition of Big O
+   - 0≤2 + 6/n≤c,   divide by n≥n₀
+   - TRUE for n≥1 and c≥8
+   - TRUE for n≥2 and c≥5
+
+   You can find other possible constants, but you need to show only
+   one pair of all possible constants
+** Back to the example
+*** Big O calculation
+   sum = 0                  =1 assignment=
+   for i = 1 to n           =n+1 assignments and n+1 comparisons=
+           sum = sum + A[i] =n assignment, 2n additions, n memory=
+                                                         =access=
+
+   - What is the order (big-O) of the first line?
+     - It's a constant, so any constant would do as big-O
+       - The convention is to use /O(1)/
+   - This says that there is some constant c such that
+     - 0 ≤ 1 ≤ c × 1 for all sufficient high value of n.
+   - It can be seen that any c ≥ 1 would do.
+   - What is the order of the second line?
+     - It is executed (n + 1) times and contains one comparison and
+       one assignment for a total complexity of 2n + 2.
+   - What is a suitable upper bound for a sufficiently large /n/?
+     - 3n, 4n, 5.732n, 2πn, and other possible values of c and n
+     - This makes it O(n)
+   - Four steps repeated n times is O(n).
+   - Hence the fragment is O(1) + O(n) + O(n) for a total of O(n)
+     - Because we can add individual constants, just take the largest
+       term when adding.
+*** Alternative calculation 
+    | Thing            | cost | times |
+    |------------------+------+-------|
+    | sum = 0          | c₁   | 1     |
+    | for i = 1 to n   | c₂   | n+1   |
+    | sum = sum + A[i] | c₃   | n     |
+    T(n) = c₁×1 + c₂×(n+1) + c₃×n
+    = (c₂ + c₃)×n + (c₁ + c₂)
+    = a×n + b
+    Thus Big-O of O(n)
+
+    Proof: b + a×n ≤ c×n → TRUE for n ≥ 1 and c ≥ b + a
+* Simple Big-O 
+  - =All O(1)=
+    - s ← 0
+    - s + 1
+    - s × 1
+    - s ≤ 1
+  - =O(n)=
+    - for i = 0 to n
+          some O(1) process
+    - sum:i=0:n:(O(1)) = O(n)
+  - =Why?=
+    - If f(n) is O(1) then ∃c₁,n₀ such that f(n)≤c₁ ∀n>n₀
+    - Let the ith term in sum:i=0:n:(O(1)) be bounded by cᵢ,∀n>nᵢ
+    - sum:i=o:n:(O(1)) ≤ c₁ + c₂ + ...+ cₙ, ∀n > max(nᵢ)
+    - sum:i=0:n:(O(1)) ≤ n × max(c₁,c₂,...,cₙ)
+    - sum:i=0:n:(O(1)) is O(n)
+  - =O(n²)=
+    - for i = 0 to n
+          for j = 0 to n
+              some O(1) process
+    - sum:i=0:n:(sum:j=0:n:(O(1))) is O(n²)
+    - for i = 0 to n
+          for j = 0 to i
+              some O(1) process
+    - O(n²), O(f(n)) < O(n²)
