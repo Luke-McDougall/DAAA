@@ -295,9 +295,9 @@ a*n^2 + b*n + d
     - A given function /f(n)/ is /O(g(n))/ if there exist positive
       constants c and n₀ such that: ~0≤f(n)≤c*g(n)~ for all n ≥ n₀.
     - O(g(n)) represents a set of functions 
-      {f(n):∃c>0,n₀>0 such that 0≤f(n)≤c.g(n),∀n≥n₀}
-      ∃ is read as：there exists, there is, or there are.
-      ∀ is read as：for all, for any, or for each
+      {f(n):∃c>0,n₀>0 such that 0≤f(n)≤c·g(n),∀n≥n₀}
+      ∃ is read as: there exists, there is, or there are.
+      ∀ is read as: for all, for any, or for each
 ** O example 
    Show that 2n + 6 = O(n)
    - 0≤2n + 6 ≤ cn, definition of Big O
@@ -367,3 +367,50 @@ a*n^2 + b*n + d
           for j = 0 to i
               some O(1) process
     - O(n²), O(f(n)) < O(n²)
+* Aim for the least upper bound
+  - Many algorithms are O(2ⁿ), but saying an algorithms is O(2ⁿ) is
+    not always very useful if that isn't truly representative.
+    - An O(n) algorithm is O(2ⁿ); but an O(2ⁿ) algorithm is NOT
+      necessarily O(n).
+  - Aim for the *smallest* O( g(n)) expression
+  - If f(n) is the smallest possible, then it is said to be a *tight*
+    *upper bound*;
+    - if f(n) is O(n²), it is also O(n³), however, the first
+      expression is better
+  - *Note: tight /upper/ bound* is different from *asymptotic /tight/
+    bound*
+    - *asymptotic tight bound* is called *big theta* (θ)
+* Ω(n) - big-omega of n
+  *Asymptotic /lower/ bound*
+  - A given function f(n) is Ω(g(n)) if there exist positive constants
+    c and n₀ such that 0 ≤ c·g(n) ≤ f(n) for all n ≥ n₀
+  - Ω(g(n)) represents a set of functions:
+    - {f(n):∃ c > 0, n₀ > 0 and 0 ≤ c·g(n) ≤ f(n), ∀ n ≥ n₀}
+** Ω example
+   Show that 2n + 6 = Ω(n)
+   1. 0 ≤ c·n ≤ 2n + 6, =definition of big Ω=
+   2. 0 ≤ c ≤ 2 + 6/n,  =divide by n≥n₀=
+   3. TRUE for c ≤ 2, n ≥ 1
+* θ(n) - Big-theta of n
+  *Asymptotic /tight/ bound*
+  - A given function f(n) is θ(g(n)) if there exists positive
+    constants c₀ and c₁ and n₀ such that:
+    - 0 ≤ c₀·g(n) ≤ f(n) ≤ c₁g(n) for all n≥n₀
+  - θ(g(n)) represents a set of functions:
+    - O(g(n)) ∩ Ω(g(n))
+  - θ(g(n)) ⊆ O(g(n))
+  - θ(g(n)) ⊆ Ω(g(n))
+** Example
+   Show that ½n²-3n = θ(n²)
+   - 0 ≤ c₀·n² ≤ ½n²-3n ≤ c₁n² =definition of big θ=
+   - 0 ≤ c₀ ≤ ½ - 3/n ≤ c₁     =divide by n²=
+   - 0 ≤ c₀ ≤ ½ - 3/n → TRUE for c₀ ≤ 1/14, n ≥ 7
+   - 0 ≤ ½ - 3/n ≤ c₁ → TRUE for c₁ ≥ ½, n ≥ 6
+   - ∵ 0 ≤ c₀·n² ≤ ½n²-3n ≤ c₁n² → TRUE for c₀ ≥ 1/14, c₁ ≥ ½, n ≥ 7
+** Alternate proof
+   Show that ½n²-3n = θ(n²)
+   - Prove for Big O and Big Ω separately.
+   - Use the larger n₀ between that for Big O and Big Ω
+   - *Big O*
+     - ½n²-3n ≤ c₂n²
+     - ½n²-3n ≤ ½n², =this is true for any n≥1=
