@@ -412,5 +412,22 @@ a*n^2 + b*n + d
    - Prove for Big O and Big Ω separately.
    - Use the larger n₀ between that for Big O and Big Ω
    - *Big O*
-     - ½n²-3n ≤ c₂n²
-     - ½n²-3n ≤ ½n², =this is true for any n≥1=
+     - 0 ≤ ½n²-3n ≤ c₁·n² =definition of big O=
+     - 0 ≤ ½ - 3/n ≤ c₁   =divide by n^2=
+     - n ≥ 6 so that f(n) is not negative
+     - ∴ 0 ≤ ½ - 3/n ≤ c₁ → TRUE for n ≥ 6, c₁ ≥ ½
+   - *Big Ω*
+     - 0 ≤ c₂·n² ≤ ½n²-3n =definition of big Ω=
+     - 0 ≤ c₂ ≤ ½ - 3/n   =divide by n²=
+     - n ≥ 7 so that c₂ > 0
+     - ∴ 0 ≤ c₂ ≤ ½ - 3/n → TRUE for n ≥7, c₂ ≤ 1/14
+   - Select the larger of the n₀ for O and Ω i.e. max(6, 7)
+     - ½n²-3n = θ(n²) for c₁ ≥ ½, c₂ ≤ 1/14, n₀ ≥ 7
+* Other examples
+  for i=1 to n              =O(n²)=  
+      for j = 1 to n        =Ω(n²)=  
+          some O(1) process =θ(n²)=  
+
+  for i=1 to n              =O(n²)=  
+      for j=1 to i          =Ω(n)=  
+          some O(1) process  
