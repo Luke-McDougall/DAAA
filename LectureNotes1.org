@@ -424,10 +424,26 @@ a*n^2 + b*n + d
    - Select the larger of the n₀ for O and Ω i.e. max(6, 7)
      - ½n²-3n = θ(n²) for c₁ ≥ ½, c₂ ≤ 1/14, n₀ ≥ 7
 * Other examples
-  for i=1 to n              =O(n²)=  
-      for j = 1 to n        =Ω(n²)=  
-          some O(1) process =θ(n²)=  
-
-  for i=1 to n              =O(n²)=  
-      for j=1 to i          =Ω(n)=  
-          some O(1) process  
+  #+BEGIN_SRC c
+    for(int i = 0; i < n; i++)
+    {
+        for(int j = 0; j < n; j++)
+        {
+            // Some O(1) process
+        }
+    }
+  #+END_SRC
+  - O(n²)
+  - Ω(n²)
+  - θ(n²)
+  #+BEGIN_SRC c
+    for(int i = 0; i < n; i++)
+    {
+        for(int j = 0; j < i; j++)
+        {
+            // Some O(1) process
+        }
+    }
+  #+END_SRC
+  - O(n²)
+  - Ω(n)
