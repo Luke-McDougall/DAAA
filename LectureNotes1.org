@@ -447,3 +447,146 @@ a*n^2 + b*n + d
   #+END_SRC
   - O(n²)
   - Ω(n)
+** Consider the following algorithm
+    #+BEGIN_SRC c
+      for(int i = 0; i < n; i++)    // O(n)
+      {
+          if(A[i] == 0)             // O(1)
+          {
+              break;                // O(1)
+          }
+          else                      // O(1)
+          {
+              sum(A);               // O(n)
+          }
+      }
+    #+END_SRC
+  - Worst case
+    - The n inputs are chosen so that the algorithm runs for as long
+      as possible
+    - Worst case running time is O(n²), when A[i] ≠ 0 for 0 ≤ i < n
+  - Best case
+    - The n inputs are chosen so that the algorithm runs for as little
+      as possible
+    - Best case running time is O(1), when A[0] = 0
+  - Average case
+    - The n inputs are assumed to be chosen uniformly random
+    - e.g., if A were a permutation of [0..n)
+      - 1/n times, stop
+      - 1/n times, 1 sum
+      - 1/n times, 2 sums
+      - 1/n times, 3 sums
+      - ...
+    - Average case running time is O(n²)
+** Expected Case
+  - What is the usual or normal input?
+  - Still of size n
+  - Can be different from average case
+  - e.g., a compression algorithm tailored to English text would
+    "expect" words of average length 5 characters.
+* Algorithm time analysis - Summary
+  - Choose model of computation
+  - Choose case
+    - Worst case.
+    - Average case.
+    - Best Case
+  - You are not free to choose size of the problem n
+    - Usually interested in large n
+  - Count the steps and report asymptotic time using O, Ω, or θ
+    - Express the bounds as tight as possible
+      - If f(n) is O(n²), it is also O(n³); present it as O(n²)
+      - If f(n) is Ω(n²) it is also Ω(n); present it as Ω(n²)
+* Space or memory analysis
+  - A model of computation should define a O(1) unit of memory
+    - a register or word size ω bits
+  - In RAM
+    - Numbers use O(1) space
+    - A[n] uses O(n) space
+    - Binary tree of n leaves is O(???)
+  - All assumed data units are less than 2^ω
+* Selection sort
+  - Input :: unsorted array A
+  - Output :: sorted array A
+    #+BEGIN_SRC c
+      for(int i = 0; i < n - 1; i++)
+      {
+          int small = i;                 // θ(1) c₀              //
+          for(int j = i + 1; j < n; j++)                         //
+          {                                                      //
+              if(A[j] < A[small])        //        //            //
+              {                          //        // ∑j=i+1 to n// ∑i=0 to n-1 
+                  small = j;             // θ(1) c₁//            //
+              }                          //        //            //
+          }                                                      //
+          int temp = A[small];          //                       //
+          A[small] = A[i];              // θ(1) c₂               //
+          A[i] = temp;                  //                       //
+      }
+    #+END_SRC
+  - T(n) = ∑i=0 to n-1 (c₀) + ∑i=0 to n-1 (c₂) + ∑i=0 to n-1 (∑j=i+1
+    to n (c₁))
+  - = O(n) + O(n) + O(n²)
+  - ∴ O(n²) 
+* Proof by Induction
+  - Induction is very similar to recursion
+    - Proof by induction is very useful in analysing *recursive*
+      algorithms
+  - To prove a statement S(n), proof by induction requires proving two
+    cases:
+    - Base Case :: prove statement S(n) only for a small value of n,
+                   e.g., n = 1 or n = 2.
+    - Inductive Step :: prove that if the statement is true for a
+                        smaller value of n, for any value of k ≥ n
+** Example
+   - F(n) =
+     - 1, if n < 3
+     - F(n-1) + F(n-2), otherwise
+   - The following is a sequence of Fibonacci number F(n):
+     - 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, ...
+   - Problem :: Prove that the nth Fibonacci number is O(Φⁿ)
+   - Note :: Φ is the root of x² - x - 1 = 0
+     - Φ = ½(1 + √5) ≈ 1.618
+   - Base Case
+     - By the definition of big O: 0 ≤ F(n) ≤ c·Φⁿ
+     - Let n = 3, 0 ≤ F(3) ≤ c·Φ³
+     - = 0 ≤ 2 ≤ c·4.236 → TRUE: ∀ c ≥ 0.472
+   - Inductive Step
+     - Assume 0 ≤ F(k) ≤ c·Φ^κ → TRUE for k > 1 and k ≤ n
+     - Given the above prove that 0 ≤ F(K + 1) ≤ c·Φ^(k + 1)
+       - F(K) ≤ c·Φ^k, add F(K-1)
+       - F(K) + F(K-1) ≤ c·Φ^k + F(K-1), F(K-1) ≤ c·Φ^(K-1)
+       - F(K) + F(K-1) ≤ c·Φ^k + c·Φ^(K-1)
+       - F(K) + F(K-1) ≤ c·(Φ^k + Φ^(K-1))
+* How to analyse a recursive function?
+  - Use *recurrence* to analyse the time complexity of a recursive
+    function.
+    - e.g., T(n) = T(n-1) + n, T(n) = 2T(n/2) + n², etc
+  - A *recurrence* is a function defined by:
+    - One or more base cases
+    - Itself with smaller arguments.
+** Methods for solving recurrence:
+   - Iteration - not recommended; easy to make mistake!
+   - Master method if T(n) = aT(n/b) + f(n)
+     - T(n) = 2T(n/2) + n → YES
+     - T(n) = T(n-1) + n → NO
+   - Substitution method (guess and induction)
+     - Use this method if the recurrence cannot be solved by master
+       method.
+     - Use recursion-tree method for the guess in induction
+** Selection Sort (recursive) - analysis
+   - Input :: Unsorted array A
+   - Output :: Sorted array A
+     #+BEGIN_SRC python
+       # The examples are in python now. Don't ask why cunt
+       def selection_sort(A, n, i):
+           if i == n:
+               return
+           small = i
+
+           for idx in range(i + 1, n+1):
+               if A[idx] < A[small]:
+                   small = idx
+
+           A[i], A[small] = A[small], A[i]
+           selection_sort(A, n, i+ 1)
+     #+END_SRC
