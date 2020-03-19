@@ -583,10 +583,72 @@ a*n^2 + b*n + d
                return
            small = i
 
-           for idx in range(i + 1, n+1):
+           for idx in range(i + 1, n + 1):
                if A[idx] < A[small]:
                    small = idx
 
            A[i], A[small] = A[small], A[i]
-           selection_sort(A, n, i+ 1)
+           selection_sort(A, n, i + 1)
      #+END_SRC
+   - Analysis:
+     Let T(n) be the time for this algorithm to operate on /n/
+     elements. The *recurrence* for time complexity of Selection Sort is.
+   - Base case :: T(1) = θ(1)
+   - find small and recursive call :: T(n) = T(n - 1) + O(n)
+   - How to sole T(n)?
+*** Iteration Method
+    - T(n) = T(n-1) + O(n), =overall → iteration k = 0=
+    - T(n-1) = T(n-2) + (n-1), =iteration k = 2=
+      - T(n) = {T(n-2) + (n-1)} + n = T(n-2) + 2n - 1
+        - =1 = 1·(1+1)/2=
+    - T(n-2) = T(n-3) + (n-2), =iteration k = 2=
+      - T(n) = {T(n-3) + (n-2)} + 2n - 1 = T(n-3) + 3n - 3
+        - =3 = 2·(2+1)/2=
+    - T(n-3) = T(n-4) + (n-3), =iteration 3=
+      - {T(n-4) + (n-3)} + 3n - 3 = T(n-4) + 4n - 6
+        - =6 = 3·(3+1)/2=
+    - T(n-4) = T(n-5) + (n-4), =iteration 4=
+      - T(n) = {T(n-5) + (n-4)} + 4n - 6 = T(n-5) + 5n - 10
+        - =10 = 4·(4+1)/2=
+    - So in general :: =T(n) = T(n - (k + 1)) + (k + 1)n - k(k + 1)/2=
+                       where k = iteration number
+      - =T(n) = T(n - (k+1)) + (k+1)(n - k/2)=
+      - =T(n) = T(n - (k+1)) + (k+1)(2n - k)/2=
+    - When k = n - 2, we have
+      - =T(n) = T(n - (n - 2 + 1)) + (n - 2 + 1)(2n - (n - 2))/2=
+      - =T(n) = T(1) + (n - 1)(n + 2)/2=
+      - =T(n) = T(1) + (n² + n - 2)/2=
+      - == O(1) + O(n²) = O(n²)=
+*** Guess and Induction
+    - Guess the solution for T(n) is O(f(n))
+    - Prove T(n) is O(f(n))
+    - Assumes answer for small n
+      - e.g., n = 2 or n = 1
+    - Show it holds for large n
+    - Show it holds for base case.
+      - Can use n₀ to exclude nasty cases (e.g., when n = 1 → log₂1 = 0)
+**** How to Guess? 
+     - Solve T(n) = 2T(n/2) + n
+     - Use recursion tree to guess solution for T(n)
+     - The fully expanded tree has height of log₂n
+     - Each level takes n time
+     - Thus, the total time is n·log₂n 
+**** How to prove by induction
+     - The guess for the solution of T(n) is )(n·log₂n)
+     - Use induction to show the solution of T(n) = 2T(n/2) + n is O(n·log₂n)
+       - Assume T(x) ≤ c·x·log₂x holds when x = n/2
+       - T(n) ≤ 2c(n/2)·log(n/2) + n
+       - ≤ c·n·log(n/2) + n
+       - c·n·log₂n - c·n·log₂2 + n
+       - c·n·log₂n - n(c-1)
+       - c·n·log₂n if c ≥ 1
+     - Now for the base case when n = 1
+       - T(1) = 2T(0) + 1  = 1 ≤ c·1·log(1) = 0 → 1 ≤ 0 ???
+       - Assume n₀ > 1, so base case is n = 2
+       - T(2) = 2T(1) + 2 ≤ c·2·log(2)
+       -  = 4 ≤ c·2 → TRUE ∀ c ≥ 2
+*** Master Method
+    - if T(n) = a·T(n/b) + f(n) then use the following master theorem.
+      - θ(n^log_b(a))     f(n) = O(n^((log_b(a) - ε))); means f(n) <
+        n^log_b(a) =Case 1=
+      - θ
