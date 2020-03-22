@@ -651,4 +651,122 @@ a*n^2 + b*n + d
     - if T(n) = a·T(n/b) + f(n) then use the following master theorem.
       - θ(n^log_b(a))     f(n) = O(n^((log_b(a) - ε))); means f(n) <
         n^log_b(a) =Case 1=
-      - θ
+      - θ(n^(log_b(a))lg(n))  f(n) = θ(n^log_b(a)); means f(n) =
+        n^log_b(a) =Case 2=
+      - θ(f(n))   f(n) = Ω(n^(log_b(a) + ε)); means f(n) >
+        n^(log_b(a)) if a·f·(n/b) ≤ c·f·(n) ∀ c<1 and large =Case3=
+      - *Case 1* must meet /polynomial/ condition
+        - f(n) must be asymptotically *smaller* than n^log_b(a) by a
+          factor of n^ε, for some constant ε > 0.
+        - *Case 3* must meet /polynomial/ and /regularity/ conditions
+          - f(n) must be asymptotically *larger* than n^log_b(a) by a
+            factor of n^ε, for some constant ε > 0.
+          - Regularity condition: a·f(n/b) ≤ c·f(n)
+            - This condition can be ignored
+*** Master Theorem Example
+    Give asymptotic tight bound for T(n) = 9T(n/3) + n
+    - *Solution*:
+    - a = 9, b = 3, and f(n) = n.
+    - n^(log_b(a)) = n^(log₃9) = n² → f(n) < n^(log_b(a)) =→ Case 1=
+    - *Does it satisfy the polynomial condition?*
+    - f(n) = O(n^(log₃9 - ε)) for ε = 1 → YES
+    - ∴ T(n) = θ(n²)
+    - *Alternatively ...*
+    - Compute the ratio between n^(log_b(a)) and f(n)
+    - If the ratio is O(n^ε), it satisfies the polynomial condition
+    - e.g., n²/n = n¹ → n² is asymptotically larger than n by a factor
+      of n^ε for ε = 1
+*** Master Theorem Example 2
+    Give asymptotic tight bound for T(n) = T(2n/3) + 1
+    - *Solution:*
+    - a = 1, b = 3/2, and f(n) = 1.
+    - n^(log_b(a)) = n^(log_3/2(1)) = n⁰ = 1 → f(n) = n^(log_b(a)) =→
+      Case 2=
+    - or f(n) = θ(n^(log_b(a)))
+    - ∴ T(n) = θ(log(n))
+*** Master Theorem Example 3.1
+    Give asymptotic tight bound for T(n) = 3T(n/4) + n·log(n)
+    - *Solution:*
+    - a = 3, b = 4, and f(n) = n·log(n)
+    - n^(log_b(a)) = n^(log₄3) = n^(0.793) → f(n) > n^(log_b(a)) =→
+      Case 3=
+    - *Does it satisfy the polynomial condition?*
+    - f(n) = Ω(n^(log₄3 + ε)), for ε ≈ 0.2 or f(n) > log₄3 → YES
+    - *Alternatively ...*
+    - f(n)/n^(log_b(a)) = n·lg(n)/n^(log₄3) = n·lg(n)/n^0.793 ≥ n^ε
+      for ε ≈ 0.2
+    - *Note: n·lg(n) ≥ c·n^(log₄3)·n^0.2*
+    - *Does it satisfy the regularity condition?* a·f(n/b) ≤ c·f(n)
+    - a = 3, b = 4, and f(n) = n·log(n)
+    - a·f(n/b) = 3(n/4)·log(n/4)
+    - ≤ (3/4)·n·log(n)
+    - ≤ c·f(n), for c ≥ 3/4 → YES
+    - Following case 3: T(n) = θ(n·lg(n))
+*** Master Theorem Example 3.2
+    Give asymptotic tight bound for T(n) = 2T(n/2) + n·log(n)
+     - *Solution:*
+     - a = 2, b = 2, and f(n) = n·log(n)
+     - n^(log_b(a)) = n^(log₂2) = n → f(n) > n^(log_b(a)) =→ Case 3=
+     - *Does it satisfy the polynomial condition? NO*
+     - f(n)/n^(log_b(a)) = (n·log(n))/n = log(n) is asymptotically
+       less than n^ε
+     - =Thus, we cannot use the master method to solve the recurrence=
+* How to prove an algorithm is correct?
+  - Use /loop invariant/ to prove its correctness.
+  - Three things to look at in loop invariant:
+    - *Initialisation*: /It is true prior to the first iteration of
+      the loop/
+    - *Maintenance*: /If it is true before an iteration of the loop,
+      it remains true before the next iteration/
+    - *Termination*: /When the loop terminates, the invariant gives a
+      useful property that help shows that the algorithm is correct/
+  - The proof using loop invariant is similar to the proof by
+    /induction/:
+    - *Initialisation* is the *base case* in induction
+    - *Maintenance* is the *inductive step* in induction
+    - *Termination* - there is a condition that makes the loop to
+      terminate
+      - It is different from that in induction that uses inductive
+        step /infinitely/.
+* Is the insertion sort correct?*
+  - *INSERTION-SORT(A)*
+    #+BEGIN_SRC c
+      for(int j = 1; j < A.length; j++)
+      {
+          int key = A[j];
+          int i = j - 1;
+
+          while(i > 0 && A[i] > key)
+          {
+              A[i + 1] = A[i];
+              i--;
+          }
+          A[i + 1] = key
+      }
+    #+END_SRC
+
+  - *Loop invariant:* At the start of the for loop, A contains the
+    same elements as its original contents but in sorted order
+
+  - *Initialisation:* When j = 1, subarray A[0 ...j - 1] contains only
+    one /sorted/ element A[0]
+    - it holds prior to the first loop iteration.
+  - *Maintenance:*
+    - For each key = A[j], assume it is true that A[0 ...j - 1] is a
+      sorted sequence
+      - We need to show that after each loop, A[0 ...j] is also sorted.
+      - Line 4-7 move each A[j-1] to its next position on right until
+        the right position for key is found
+        - Thus, after inserting key, A[0 ..j] is a sorted sequence,
+          which will be used for the next iteration of the loop, with
+          j+1.
+
+  - *Termination*:
+    - The loop terminates when j = A.length = n. Each iteration always
+      increments the value of j by one.
+    - Thus, eventually, the value of j will reach n + 1, and the loop
+      will terminate with a sorted A[0 ...n]
+  - Hence the insertion sort is correct.
+  
+  =NOTE: A more complex algorithm may require a more complex / formal
+  proof to show its correctness.= 
